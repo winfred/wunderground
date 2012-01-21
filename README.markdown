@@ -70,7 +70,7 @@ Any location string that Wunderground accepts will pass straight through this wr
 	
 	w_api.get_conditions_for("autoip") #passes straight through, but only gets the weather for your server's IP, so not very useful probably
 	
-For geocoding a specific ip address, just provide in a an IP like this:
+For geocoding a specific ip address as the location, just provide an IP like this:
 	
 	w_api.get_alerts_for({geo_ip: "127.0.0.1"})
 	
@@ -103,7 +103,7 @@ to get the history data for this date/location. You may enjoy more flexibility w
 	w_api.get_history_for(Date.now, {lang: "FR"}, "France/Paris")
 	w_api.get_history_for(Date.now, {lang: "DE", geo_ip:"123.4.5.6"})
 
-.get_history_for accepts a string or any Date/Time/DateTime object that responds to .strftime("%Y%m%d") to auto-format the date.
+.get_history_for accepts a string or any Date/Time/DateTime-like object that responds to .strftime("%Y%m%d") to auto-format the date.
 
 
 ### Other Stuff

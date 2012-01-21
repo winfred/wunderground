@@ -50,5 +50,5 @@ Rake::RDocTask.new do |rdoc|
 end
 desc "Open an irb session preloaded with this library"
 task :console do
-  sh "irb -rubygems -I lib -r wunderground_pound"
+  exec "irb -rubygems -I lib -r wunderground"
 end
