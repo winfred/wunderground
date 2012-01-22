@@ -40,7 +40,7 @@ Standard request breakdown:
 	
 ##Optional Hash
 
-This ugly little guy handles the nonconformists in Wunderground's API request structure. Luckily there are only two of these baddies. (details below)
+This ugly little guy handles the nonconformists in Wunderground's API request structure. Luckily there are only two of these baddies, and only if you need them. (details below)
 
 	optional_hash = {lang: "FR", geo_ip:"127.0.0.1"}
 	
@@ -90,20 +90,24 @@ Also, you can set the default language in the constructor or with a setter.
 	w_api.get_forecast_for("France","Paris") #automatically includes /lang:FR/ in the request url, so results will be in French
 	w_api.get_forecast_for({lang:"DE"},"France","Paris") #this will override the French(FR) default with German(DE)
 	
-##History Support
+##History and Planner Helpers
 
 While it is possible to call
 
 	w_api.get_history20101231_for("77789")
+	w_api.get_planner03150323_for("FL","Destin")
 
-to get the history data for this date/location. You may enjoy more flexibility when using get_history_for:
+to get the history/planner data for this date/location. You may enjoy more flexibility when using get_history_for and get_planner_for:
 
 	w_api.get_history_for("20101010","AL","Birmingham")
 	w_api.get_history_for(1.year.ago,"33909")
 	w_api.get_history_for(Date.now, {lang: "FR"}, "France/Paris")
 	w_api.get_history_for(Date.now, {lang: "DE", geo_ip:"123.4.5.6"})
+	w_api.get_planner_for("03150323","AL","Gulf Shores")
+	w_api.get_planner_for(Time.now,Time.now+7.days,{geo_ip: "10.0.0.1"})
+	w_api.get_planner_for(Time.now,Time.now+7.days,"33030")
 
-.get_history_for accepts a string or any Date/Time/DateTime-like object that responds to .strftime("%Y%m%d") to auto-format the date.
+.get_history_for and .get_planner_for accepts a string or any Date/Time/DateTime-like object that responds to .strftime("%Y%m%d") to auto-format the date.
 
 
 ### Other Stuff
@@ -127,7 +131,7 @@ Do eet.
 
 ##Thanks
 
-* [Amro Mousa](https://github.com/amro) - design inspiration (*cough* stolen)
+* [Amro Mousa](https://github.com/amro) - design inspiration
 
 
 ##Copyrights
