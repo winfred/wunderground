@@ -19,14 +19,6 @@ Jeweler::Tasks.new do |gem|
   gem.description = %Q{A simple ruby API wrapper for interacting with the Wunderground API}
   gem.email = "winfred.nadeau@gmail.com"
   gem.authors = ["Winfred Nadeau"]
-  # Include your dependencies below. Runtime dependencies are required when using your gem,
-  # and development dependencies are only needed for development (ie running rake tasks, tests, etc)
-  gem.add_runtime_dependency 'httparty', '> 0.6.0'
-  gem.add_runtime_dependency 'json', '> 1.4.0'
-  gem.add_development_dependency 'shoulda', '> 0.0.0'
-  gem.add_development_dependency 'mocha', '> 0.9.11'
-  gem.add_development_dependency 'simplecov', '> 0'
-  #gem.add_development_dependency 'rspec', '> 1.2.3'
 end
 Jeweler::RubygemsDotOrgTasks.new
 
