@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "wunderground_ruby"
-  s.version = "0.1.0"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Winfred Nadeau"]
-  s.date = "2012-01-21"
+  s.date = "2012-01-22"
   s.description = "A simple ruby API wrapper for interacting with the Wunderground API"
   s.email = "winfred.nadeau@gmail.com"
   s.extra_rdoc_files = [
@@ -24,7 +24,8 @@ Gem::Specification.new do |s|
     "VERSION",
     "lib/wunderground.rb",
     "test/helper.rb",
-    "test/test_wunderground.rb"
+    "test/test_wunderground.rb",
+    "wunderground_ruby.gemspec"
   ]
   s.homepage = "http://github.com/wnadeau/wunderground_ruby"
   s.licenses = ["MIT"]
@@ -50,11 +51,6 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<mocha>, ["> 0.9.11"])
       s.add_development_dependency(%q<ruby-debug19>, [">= 0"])
       s.add_development_dependency(%q<ruby-debug>, [">= 0"])
-      s.add_runtime_dependency(%q<httparty>, ["> 0.6.0"])
-      s.add_runtime_dependency(%q<json>, ["> 1.4.0"])
-      s.add_development_dependency(%q<shoulda>, ["> 0.0.0"])
-      s.add_development_dependency(%q<mocha>, ["> 0.9.11"])
-      s.add_development_dependency(%q<simplecov>, ["> 0"])
     else
       s.add_dependency(%q<json>, ["> 1.4.0"])
       s.add_dependency(%q<httparty>, ["> 0.6.0"])
@@ -66,11 +62,6 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<mocha>, ["> 0.9.11"])
       s.add_dependency(%q<ruby-debug19>, [">= 0"])
       s.add_dependency(%q<ruby-debug>, [">= 0"])
-      s.add_dependency(%q<httparty>, ["> 0.6.0"])
-      s.add_dependency(%q<json>, ["> 1.4.0"])
-      s.add_dependency(%q<shoulda>, ["> 0.0.0"])
-      s.add_dependency(%q<mocha>, ["> 0.9.11"])
-      s.add_dependency(%q<simplecov>, ["> 0"])
     end
   else
     s.add_dependency(%q<json>, ["> 1.4.0"])
@@ -83,11 +74,6 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<mocha>, ["> 0.9.11"])
     s.add_dependency(%q<ruby-debug19>, [">= 0"])
     s.add_dependency(%q<ruby-debug>, [">= 0"])
-    s.add_dependency(%q<httparty>, ["> 0.6.0"])
-    s.add_dependency(%q<json>, ["> 1.4.0"])
-    s.add_dependency(%q<shoulda>, ["> 0.0.0"])
-    s.add_dependency(%q<mocha>, ["> 0.9.11"])
-    s.add_dependency(%q<simplecov>, ["> 0"])
   end
 end
 
