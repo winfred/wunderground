@@ -36,9 +36,9 @@ class Wunderground
 
 protected
 
-  def call(method, params = {})
+  def call(method, timeout)
     raise MissingAPIKey if @api_key.nil?
-    response = self.class.get(base_api_url << method, :timeout => @timeout)
+    response = self.class.get(base_api_url << method, :timeout => (timeout || @timeout))
     begin
       response = JSON.parse(response.body)
     rescue
@@ -60,8 +60,9 @@ protected
       opts = args.pop 
       url = url.sub(/\/lang:.*/,'') and url << "/lang:#{opts[:lang]}" if opts[:lang] 
       ip_address = opts[:geo_ip] and args.push("autoip") if opts[:geo_ip]
+      timeout = opts[:timeout]
     end
-    call(url <<'/q/'<< args.join('/') << ".json" << (ip_address.nil? ? '': "?geo_ip=#{ip_address}"))
+    call(url <<'/q/'<< args.join('/') << ".json" << (ip_address ? "?geo_ip=#{ip_address}" : ''),timeout)
   end
 
   class << self

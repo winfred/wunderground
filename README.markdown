@@ -36,13 +36,16 @@ Check out below and test file for more examples.
 
 Standard request breakdown:
 
-	wrapper_object.get_[feature]_and_[another feature]_for(optional_hash,"and/or location string")
+	wrapper_instance.get_[feature]_and_[another feature]_for("location string",optional: "hash", values: "at the end")
 	
 ##Optional Hash
 
-This ugly little guy handles the nonconformists in Wunderground's API request structure. Luckily there are only two of these baddies, and only if you need them. (details below)
+This ugly little guy handles the nonconformists in Wunderground's API request structure and the pervasive request timeout option.
+Luckily there are only three of these baddies, and only if you need them. (details below)
 
-	optional_hash = {lang: "FR", geo_ip:"127.0.0.1"}
+	optional_hash = {lang: "FR", geo_ip:"127.0.0.1", timeout: 20}
+	
+Note: If needing to use these options, please place them as the last parameter(s) to the method call.
 	
 Can you think of a better way to handle these? Pull requests welcome.
 
@@ -72,7 +75,7 @@ Any location string that Wunderground accepts will pass straight through this wr
 	
 For geocoding a specific ip address as the location, just provide an IP like this:
 	
-	w_api.get_alerts_for({geo_ip: "127.0.0.1"})
+	w_api.get_alerts_for(geo_ip: "127.0.0.1")
 	
 This was the quickest workaround to the non-conformity of the auto_ip request format.
 	
@@ -81,14 +84,14 @@ This was the quickest workaround to the non-conformity of the auto_ip request fo
 
 Because the Language modifier in Wunderground's request structure uses a colon, which doesn't jive with the method_missing design, adding a specific language to one request can be done like this:
 
-	w_api.get_forecast_for({lang:"FR"},"France","Paris")
+	w_api.get_forecast_for("France","Paris", lang 'FR')
 
 Also, you can set the default language in the constructor or with a setter.
 
-	w_api = Wunderground.new("apikey",{language: "FR"})
+	w_api = Wunderground.new("apikey",language: "FR")
 	w_api.language = 'FR'
 	w_api.get_forecast_for("France","Paris") #automatically includes /lang:FR/ in the request url, so results will be in French
-	w_api.get_forecast_for({lang:"DE"},"France","Paris") #this will override the French(FR) default with German(DE)
+	w_api.get_forecast_for("France","Paris",lang: 'DE') #this will override the French(FR) default with German(DE)
 	
 ##History and Planner Helpers
 
@@ -101,21 +104,22 @@ to get the history/planner data for this date/location. You may enjoy more flexi
 
 	w_api.get_history_for("20101010","AL","Birmingham")
 	w_api.get_history_for(1.year.ago,"33909")
-	w_api.get_history_for(Date.now, {lang: "FR"}, "France/Paris")
-	w_api.get_history_for(Date.now, {lang: "DE", geo_ip:"123.4.5.6"})
+	w_api.get_history_for(Date.now, "France/Paris",lang: "FR")
+	w_api.get_history_for(Date.now, geo_ip:"123.4.5.6", lang: "FR")
 	w_api.get_planner_for("03150323","AL","Gulf Shores")
-	w_api.get_planner_for(Time.now,Time.now+7.days,{geo_ip: "10.0.0.1"})
+	w_api.get_planner_for(Time.now,Time.now+7.days, geo_ip: "10.0.0.1")
 	w_api.get_planner_for(Time.now,Time.now+7.days,"33030")
 
-.get_history_for and .get_planner_for accepts a string or any Date/Time/DateTime-like object that responds to .strftime("%Y%m%d") to auto-format the date.
+.get_history_for and .get_planner_for accepts a preformatted string or any Date/Time/DateTime-like object that responds to .strftime to auto-format the date.
 
 
-### Other Stuff
+### Request Timeout
 
-wunderground_ruby defaults to a 30 second timeout. You can optionally set your own timeout (in seconds) like so:
+wunderground_ruby defaults to a 30 second timeout. You can optionally set your own timeout (in seconds) in three ways like so:
 
-	w_api = Wunderground.new("apikey",{timeout: 60})
+	w_api = Wunderground.new("apikey",timeout: 60)
     w_api.timeout = 5
+	w_api.get_history_for(1.year.ago, geo_ip: '127.0.0.1', timeout:60)
 
 
 ### Error Handling
