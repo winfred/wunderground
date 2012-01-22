@@ -81,7 +81,7 @@ class TestWunderground < Test::Unit::TestCase
     end
     should 'contain language modifier for method with {lang:"code"} hash' do
       expect_get(@url+"123/forecast/lang:FR/q/ME/Portland.json",{timeout: 30})
-      @wunderground.get_forecast_for({lang:'FR'},"ME","Portland")
+      @wunderground.get_forecast_for("ME","Portland", lang: 'FR')
     end
     context 'location parameter' do
       should 'formats query of type array' do
@@ -96,7 +96,7 @@ class TestWunderground < Test::Unit::TestCase
       end
       should 'formats query of type geo_ip' do
         expect_get(@url+"123/forecast/q/autoip.json?geo_ip=127.0.0.1",{timeout: 30})
-        @wunderground.get_forecast_for({geo_ip: "127.0.0.1"})
+        @wunderground.get_forecast_for(geo_ip: "127.0.0.1")
       end
     end
     context 'language support' do
@@ -107,20 +107,20 @@ class TestWunderground < Test::Unit::TestCase
       end
       should 'have optional language override on call' do
         expect_get(@url+"123/forecast/lang:DE/q/ME/Portland.json",{timeout: 30})
-        @wunderground.get_forecast_for({lang: "DE"},"ME","Portland")
+        @wunderground.get_forecast_for("ME","Portland", lang: 'DE')
       end
       should 'pass language through history helper' do
         expect_get(@url+"123/history_#{Time.now.strftime("%Y%m%d")}/lang:DE/q/ME/Portland.json",{timeout: 30})
-        @wunderground.get_history_for(Time.now,{lang: "DE"},"ME","Portland")
+        @wunderground.get_history_for(Time.now,"ME","Portland",lang: 'DE')
       end
       should 'pass language through planner helper' do
         expect_get(@url+"123/planner_#{Time.now.strftime("%m%d")}#{(Time.now + 700000).strftime('%m%d')}/lang:DE/q/ME/Portland.json",{timeout: 30})
-        @wunderground.get_planner_for(Time.now,(Time.now+700000),{lang: "DE"},"ME","Portland")
+        @wunderground.get_planner_for(Time.now,(Time.now+700000),"ME","Portland", lang: 'DE')
       end
       should 'pass language through planner helper with IP' do
         expect_get(@url+"123/planner_#{Time.now.strftime('%m%d')}#{(Time.now +  
               700000).strftime('%m%d')}/lang:DE/q/autoip.json?geo_ip=127.0.0.1",{timeout: 30})
-        @wunderground.get_planner_for(Time.now,(Time.now+700000),{lang: "DE",geo_ip: "127.0.0.1"})
+        @wunderground.get_planner_for(Time.now,(Time.now+700000),lang: "DE",geo_ip: "127.0.0.1")
       end
     end
     context 'for get_history_for(date,location) helper' do
@@ -138,7 +138,7 @@ class TestWunderground < Test::Unit::TestCase
       end
       should 'accept Date object and pass optional hash object' do
         expect_get(@url+"123/history_#{Time.now.strftime("%Y%m%d")}/q/autoip.json?geo_ip=127.0.0.1",{timeout: 30})
-        @wunderground.get_history_for(Time.now.to_datetime,{geo_ip: '127.0.0.1'})
+        @wunderground.get_history_for(Time.now.to_datetime,geo_ip: '127.0.0.1')
       end
     end
     context 'for get_planner_for helper' do
@@ -148,7 +148,7 @@ class TestWunderground < Test::Unit::TestCase
       end
       should 'turn two date objects into a properly formatted string' do
         expect_get(@url+"123/planner_#{Time.now.strftime('%m%d')}#{(Time.now + 700000).strftime('%m%d')}/q/autoip.json?geo_ip=127.0.0.1",{timeout: 30})
-        @wunderground.get_planner_for(Time.now,(Time.now + 700000),{geo_ip: '127.0.0.1'})
+        @wunderground.get_planner_for(Time.now,(Time.now + 700000),geo_ip: '127.0.0.1')
       end
     end
   end

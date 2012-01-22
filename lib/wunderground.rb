@@ -56,10 +56,10 @@ protected
     raise NoMethodError, "undefined method: #{method} for Wunderground" unless method.to_s.start_with?("get_") and method.to_s.end_with?("_for") 
     url = method.to_s.gsub("get_","").gsub("_for","").gsub("_and_","/")
     url << "/lang:#{@language}" if @language
-    if args[0].class == Hash
-      url = url.sub(/\/lang:.*/,'') and url << "/lang:#{args[0][:lang]}" if args[0][:lang] 
-      ip_address = args[0][:geo_ip] and args.push("autoip") if args[0][:geo_ip]
-      args.delete_at(0) 
+    if args.last.instance_of? Hash
+      opts = args.pop 
+      url = url.sub(/\/lang:.*/,'') and url << "/lang:#{opts[:lang]}" if opts[:lang] 
+      ip_address = opts[:geo_ip] and args.push("autoip") if opts[:geo_ip]
     end
     call(url <<'/q/'<< args.join('/') << ".json" << (ip_address.nil? ? '': "?geo_ip=#{ip_address}"))
   end
