@@ -1,0 +1,206 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Wunderground Ruby by wnadeau</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>Wunderground Ruby</h1>
+        <p>A simple ruby wrapper for the Wunderground.com API</p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/wnadeau/wunderground_ruby" class="button fork"><strong>Fork On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/wnadeau/wunderground_ruby/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/wnadeau/wunderground_ruby/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <h1>Wunderground Ruby API wrapper</h1>
+
+<p>Wunderground Ruby is an API wrapper for interacting with the <a href="http://www.wunderground.com/weather/api/">Wunderground API</a></p>
+
+<h2>Installation</h2>
+
+<pre><code>$ gem install wunderground_ruby
+</code></pre>
+
+<p>or in your Gemfile</p>
+
+<pre><code>gem 'wunderground_ruby'
+</code></pre>
+
+<h2>Requirements</h2>
+
+<p>A Wunderground account and API key.
+If a request is attempted without an APIkey, this wrapper will raise a MissingAPIKey exception</p>
+
+<p>JSON only at the moment.</p>
+
+<h2>Usage</h2>
+
+<p>You can create an instance of the API wrapper and pass it the API key:</p>
+
+<pre><code>w_api = Wunderground.new("your apikey")
+</code></pre>
+
+<p>You can also set the environment variable "WUNDERGROUND_API_KEY" and wunderground_ruby will use it when you create an instance:</p>
+
+<pre><code>w_api = Wunderground.new
+</code></pre>
+
+<p>This gem/wrapper uses some method_missing fun to make it easier to get feature and location data from Wunderground</p>
+
+<p>Any number of <a href="http://www.wunderground.com/weather/api/d/documentation.html#request">features</a> work by passing the features from the method straight into the request URL.</p>
+
+<p>Check out below and test file for more examples.</p>
+
+<p>Standard request breakdown:</p>
+
+<pre><code>wrapper_instance.get_[feature]_and_[another feature]_for("location string",optional: "hash", values: "at the end")
+</code></pre>
+
+<h2>Optional Hash</h2>
+
+<p>This ugly little guy handles the nonconformists in Wunderground's API request structure and the pervasive request timeout option.
+Luckily there are only three of these baddies, and only if you need them. (details below)</p>
+
+<pre><code>optional_hash = {lang: "FR", geo_ip:"127.0.0.1", timeout: 20}
+</code></pre>
+
+<p>Note: If needing to use these options, please place them as the last parameter(s) to the method call.</p>
+
+<p>Can you think of a better way to handle these? Pull requests welcome.</p>
+
+<h2>Features</h2>
+
+<p>The method_missing magic happens here.</p>
+
+<pre><code>w_api.get_forecast_for("WA","Spokane")
+w_api.get_forecast_and_conditions_for("1234.1234,-1234.1234") #a lat/long string
+w_api.get_webcams_and_conditions_and_alerts_for("33043") #a zipcode
+</code></pre>
+
+<h2>Locations</h2>
+
+<p>Any location string that Wunderground accepts will pass straight through this wrapper to their API, <em>except for a specific geo-ip.</em> (examples below)</p>
+
+<pre><code>#there is some handy array joining, if needed
+w_api.get_forecast_for("WA/Spokane") #equivalent to the next example
+w_api.get_forecast_for("WA","Spokane") #equivalent to the previous example
+
+#zipcodes,lat/long, aiport codes, all of them just pass straight through this wrapper and into the request URL
+w_api.get_conditions_for("77898")
+
+#weather station code uniqueness - they use the 'pws:' prefix for weather station codes. So does this wrapper.
+w_api.get_conditions_for("pws:STATIONCODE")
+
+w_api.get_conditions_for("autoip") #passes straight through, but only gets the weather for your server's IP, so not very useful probably
+</code></pre>
+
+<p>For geocoding a specific ip address as the location, just provide an IP like this:</p>
+
+<pre><code>w_api.get_alerts_for(geo_ip: "127.0.0.1")
+</code></pre>
+
+<p>This was the quickest workaround to the non-conformity of the auto_ip request format.</p>
+
+<h2>Language Support</h2>
+
+<p>Because the Language modifier in Wunderground's request structure uses a colon, which doesn't jive with the method_missing design, adding a specific language to one request can be done like this:</p>
+
+<pre><code>w_api.get_forecast_for("France","Paris", lang 'FR')
+</code></pre>
+
+<p>Also, you can set the default language in the constructor or with a setter.</p>
+
+<pre><code>w_api = Wunderground.new("apikey",language: "FR")
+w_api.language = 'FR'
+w_api.get_forecast_for("France","Paris") #automatically includes /lang:FR/ in the request url, so results will be in French
+w_api.get_forecast_for("France","Paris",lang: 'DE') #this will override the French(FR) default with German(DE)
+</code></pre>
+
+<h2>History and Planner Helpers</h2>
+
+<p>While it is possible to call</p>
+
+<pre><code>w_api.get_history20101231_for("77789")
+w_api.get_planner03150323_for("FL","Destin")
+</code></pre>
+
+<p>to get the history/planner data for this date/location. You may enjoy more flexibility when using get_history_for and get_planner_for:</p>
+
+<pre><code>w_api.get_history_for("20101010","AL","Birmingham")
+w_api.get_history_for(1.year.ago,"33909")
+w_api.get_history_for(Date.now, "France/Paris",lang: "FR")
+w_api.get_history_for(Date.now, geo_ip:"123.4.5.6", lang: "FR")
+w_api.get_planner_for("03150323","AL","Gulf Shores")
+w_api.get_planner_for(Time.now,Time.now+7.days, geo_ip: "10.0.0.1")
+w_api.get_planner_for(Time.now,Time.now+7.days,"33030")
+</code></pre>
+
+<p>.get_history_for and .get_planner_for accepts a preformatted string or any Date/Time/DateTime-like object that responds to .strftime to auto-format the date.</p>
+
+<h3>Request Timeout</h3>
+
+<p>wunderground_ruby defaults to a 30 second timeout. You can optionally set your own timeout (in seconds) in three ways like so:</p>
+
+<pre><code>w_api = Wunderground.new("apikey",timeout: 60)
+w_api.timeout = 5
+w_api.get_history_for(1.year.ago, geo_ip: '127.0.0.1', timeout:60)
+</code></pre>
+
+<h3>Error Handling</h3>
+
+<p>By default you are expected to handle errors returned by the APIs manually. (see their documentation for more information about these errors)</p>
+
+<p>If you set the <code>throws_exceptions</code> boolean attribute for a given instance then
+wunderground_ruby will attempt to intercept the errors and raise an APIError exception if you feel like catching it.</p>
+
+<h2>Contributing</h2>
+
+<p>Do eet.</p>
+
+<h2>Thanks</h2>
+
+<ul>
+<li>
+<a href="https://github.com/amro">Amro Mousa</a> - design inspiration</li>
+</ul><h2>Copyrights</h2>
+
+<ul>
+<li>Copyright (c) 2012 Winfred Nadeau. See LICENSE.txt for details.</li>
+</ul><p>Winfred Nadeau is not affiliated with <a href="http://wunderground.com">Wunderground.com</a>, so check them out for licensing/copyright/legal/TOS details regarding their API and their data.</p>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/wnadeau">wnadeau</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+  </body>
+</html>
