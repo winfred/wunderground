@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
     "lib/wunderground.rb",
     "test/helper.rb",
     "test/test_wunderground.rb",
+    "wunderground.gemspec",
     "wunderground_ruby.gemspec"
   ]
   s.homepage = "http://github.com/wnadeau/wunderground_ruby"
