@@ -36,7 +36,7 @@ Check out below and test file for more examples.
 
 Standard request breakdown:
 
-	wrapper_instance.get_[feature]_and_[another feature]_for("location string",optional: "hash", values: "at the end")
+	wrapper_instance.[feature]_and_[another feature]_for("location string",optional: "hash", values: "at the end")
 	
 ##Optional Hash
 
@@ -53,29 +53,29 @@ Can you think of a better way to handle these? Pull requests welcome.
 
 The method_missing magic happens here.
 
-	w_api.get_forecast_for("WA","Spokane")
-	w_api.get_forecast_and_conditions_for("1234.1234,-1234.1234") #a lat/long string
-	w_api.get_webcams_and_conditions_and_alerts_for("33043") #a zipcode
+	w_api.forecast_for("WA","Spokane")
+	w_api.forecast_and_conditions_for("1234.1234,-1234.1234") #a lat/long string
+	w_api.webcams_and_conditions_and_alerts_for("33043") #a zipcode
 
 ##Locations
 
 Any location string that Wunderground accepts will pass straight through this wrapper to their API, _except for a specific geo-ip._ (examples below)
 
 	#there is some handy array joining, if needed
-	w_api.get_forecast_for("WA/Spokane") #equivalent to the next example
-	w_api.get_forecast_for("WA","Spokane") #equivalent to the previous example
+	w_api.forecast_for("WA/Spokane") #equivalent to the next example
+	w_api.forecast_for("WA","Spokane") #equivalent to the previous example
 	
 	#zipcodes,lat/long, aiport codes, all of them just pass straight through this wrapper and into the request URL
-	w_api.get_conditions_for("77898")
+	w_api.conditions_for("77898")
 	
 	#weather station code uniqueness - they use the 'pws:' prefix for weather station codes. So does this wrapper.
-	w_api.get_conditions_for("pws:STATIONCODE")
+	w_api.conditions_for("pws:STATIONCODE")
 	
-	w_api.get_conditions_for("autoip") #passes straight through, but only gets the weather for your server's IP, so not very useful probably
+	w_api.conditions_for("autoip") #passes straight through, but only gets the weather for your server's IP, so not very useful probably
 	
 For geocoding a specific ip address as the location, just provide an IP like this:
 	
-	w_api.get_alerts_for(geo_ip: "127.0.0.1")
+	w_api.alerts_for(geo_ip: "127.0.0.1")
 	
 This was the quickest workaround to the non-conformity of the auto_ip request format.
 	
@@ -84,42 +84,42 @@ This was the quickest workaround to the non-conformity of the auto_ip request fo
 
 Because the Language modifier in Wunderground's request structure uses a colon, which doesn't jive with the method_missing design, adding a specific language to one request can be done like this:
 
-	w_api.get_forecast_for("France","Paris", lang 'FR')
+	w_api.forecast_for("France","Paris", lang 'FR')
 
 Also, you can set the default language in the constructor or with a setter.
 
 	w_api = Wunderground.new("apikey",language: "FR")
 	w_api.language = 'FR'
-	w_api.get_forecast_for("France","Paris") #automatically includes /lang:FR/ in the request url, so results will be in French
-	w_api.get_forecast_for("France","Paris",lang: 'DE') #this will override the French(FR) default with German(DE)
+	w_api.forecast_for("France","Paris") #automatically includes /lang:FR/ in the request url, so results will be in French
+	w_api.forecast_for("France","Paris",lang: 'DE') #this will override the French(FR) default with German(DE)
 	
 ##History and Planner Helpers
 
 While it is possible to call
 
-	w_api.get_history20101231_for("77789")
-	w_api.get_planner03150323_for("FL","Destin")
+	w_api.history20101231_for("77789")
+	w_api.planner03150323_for("FL","Destin")
 
-to get the history/planner data for this date/location. You may enjoy more flexibility when using get_history_for and get_planner_for:
+to get the history/planner data for this date/location. You may enjoy more flexibility when using history_for and planner_for:
 
-	w_api.get_history_for("20101010","AL","Birmingham")
-	w_api.get_history_for(1.year.ago,"33909")
-	w_api.get_history_for(Date.now, "France/Paris",lang: "FR")
-	w_api.get_history_for(Date.now, geo_ip:"123.4.5.6", lang: "FR")
-	w_api.get_planner_for("03150323","AL","Gulf Shores")
-	w_api.get_planner_for(Time.now,Time.now+7.days, geo_ip: "10.0.0.1")
-	w_api.get_planner_for(Time.now,Time.now+7.days,"33030")
+	w_api.history_for("20101010","AL","Birmingham")
+	w_api.history_for(1.year.ago,"33909")
+	w_api.history_for(Date.now, "France/Paris",lang: "FR")
+	w_api.history_for(Date.now, geo_ip:"123.4.5.6", lang: "FR")
+	w_api.planner_for("03150323","AL","Gulf Shores")
+	w_api.planner_for(Time.now,Time.now+7.days, geo_ip: "10.0.0.1")
+	w_api.planner_for(Time.now,Time.now+7.days,"33030")
 
-.get_history_for and .get_planner_for accepts a preformatted string or any Date/Time/DateTime-like object that responds to .strftime to auto-format the date.
+.history_for and .planner_for accepts a preformatted string or any Date/Time/DateTime-like object that responds to .strftime to auto-format the date.
 
 
-### Request Timeout
+## Request Timeout
 
 wunderground_ruby defaults to a 30 second timeout. You can optionally set your own timeout (in seconds) in three ways like so:
 
 	w_api = Wunderground.new("apikey",timeout: 60)
     w_api.timeout = 5
-	w_api.get_history_for(1.year.ago, geo_ip: '127.0.0.1', timeout:60)
+	w_api.history_for(1.year.ago, geo_ip: '127.0.0.1', timeout:60)
 
 
 ### Error Handling

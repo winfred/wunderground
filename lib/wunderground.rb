@@ -23,15 +23,15 @@ class Wunderground
   def base_api_url
     "http://api.wunderground.com/api/#{api_key}/"
   end
-  def get_history_for(date,*args)
+  def history_for(date,*args)
     history = (date.class == String ? "history_#{date}" : "history_#{date.strftime("%Y%m%d")}")
-    send("get_#{history}_for",*args)
+    send("#{history}_for",*args)
   end
-  def get_planner_for(date,*args)
-    send("get_planner_#{date}_for",args) and return if date.class == String
+  def planner_for(date,*args)
+    send("planner_#{date}_for",args) and return if date.class == String
     range = date.strftime("%m%d") << args[0].strftime("%m%d")    
     args.delete_at(0)
-    send("get_planner_#{range}_for",*args)
+    send("planner_#{range}_for",*args)
   end
 
 protected
@@ -53,8 +53,8 @@ protected
   end
 
   def method_missing(method, *args)
-    raise NoMethodError, "undefined method: #{method} for Wunderground" unless method.to_s.start_with?("get_") and method.to_s.end_with?("_for") 
-    url = method.to_s.gsub("get_","").gsub("_for","").gsub("_and_","/")
+    raise NoMethodError, "undefined method: #{method} for Wunderground" unless method.to_s.end_with?("_for") 
+    url = method.to_s.gsub("_for","").gsub("_and_","/")
     url << "/lang:#{@language}" if @language
     if args.last.instance_of? Hash
       opts = args.pop 
