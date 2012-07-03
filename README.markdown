@@ -5,11 +5,11 @@ Wunderground Ruby is an API wrapper for interacting with the [Wunderground API](
 
 ##Installation
 
-    $ gem install wunderground_ruby
+    $ gem install wunderground
 
 or in your Gemfile
 
-	gem 'wunderground_ruby'
+	gem 'wunderground'
 
 ##Requirements
 
