@@ -12,7 +12,7 @@ require 'rake'
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = "wunderground_ruby"
+  gem.name = "wunderground"
   gem.homepage = "http://github.com/wnadeau/wunderground_ruby"
   gem.license = "MIT"
   gem.summary = %Q{A simple ruby API wrapper for interacting with the Wunderground API}
