@@ -24,19 +24,6 @@ class TestWunderground < Test::Unit::TestCase
       assert_equal(60,@wunderground.timeout)
       assert_equal('FR',@wunderground.language)
     end
-    should "set an API key from the 'WUNDERGROUND_API_KEY' ENV variable" do
-      ENV['WUNDERGROUND_API_KEY'] = @api_key
-      @wunderground = Wunderground.new
-      assert_equal(@api_key, @wunderground.api_key)
-      ENV.delete('WUNDERGROUND_API_KEY')
-    end
-
-    should "set an API key from the 'WUNDERGROUND_APIKEY' ENV variable" do
-      ENV['WUNDERGROUND_APIKEY'] = @api_key
-      @wunderground = Wunderground.new
-      assert_equal(@api_key, @wunderground.api_key)
-      ENV.delete('WUNDERGROUND_APIKEY')
-    end
 
     should "set an API key via setter" do
       @wunderground = Wunderground.new
@@ -49,6 +36,32 @@ class TestWunderground < Test::Unit::TestCase
       timeout = 30
       @wunderground.timeout = timeout
       assert_equal(timeout, @wunderground.timeout)
+    end
+    
+    context "ENV api key" do
+      setup do
+        ENV['WUNDERGROUND_API_KEY'] = @api_key
+      end
+      
+      teardown do
+        ENV.delete('WUNDERGROUND_API_KEY')
+      end
+      
+      should "set an API key from the 'WUNDERGROUND_API_KEY' ENV variable" do
+        @wunderground = Wunderground.new
+        assert_equal(@api_key, @wunderground.api_key)
+      end
+
+      should "set an API key from the 'WUNDERGROUND_APIKEY' ENV variable" do
+        @wunderground = Wunderground.new
+        assert_equal(@api_key, @wunderground.api_key)
+      end
+      
+      should "set timeout and language in constructor" do
+        @wunderground = Wunderground.new(timeout: 60, language: 'FR')
+        assert_equal(60,@wunderground.timeout)
+        assert_equal('FR',@wunderground.language)
+      end
     end
   end
 
