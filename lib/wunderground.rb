@@ -13,7 +13,13 @@ class Wunderground
 
   attr_accessor :api_key, :timeout, :throws_exceptions, :language
 
-  def initialize(api_key = nil, extra_params = {})
+  def initialize(*args)
+    extra_params = {}
+    if !args.nil?
+      api_key = args.first if args.first.is_a?(String)
+      extra_params = args.last if args.last.is_a?(Hash)
+    end
+    
     @api_key = api_key || ENV['WUNDERGROUND_API_KEY'] || ENV['WUNDERGROUND_APIKEY'] || self.class.api_key
     @timeout = extra_params[:timeout] || 30
     @throws_exceptions = extra_params[:throws_exceptions] || false
