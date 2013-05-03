@@ -23,10 +23,12 @@ class Wunderground
   def base_api_url
     "http://api.wunderground.com/api/#{api_key}/"
   end
+
   def history_for(date,*args)
     history = (date.class == String ? "history_#{date}" : "history_#{date.strftime("%Y%m%d")}")
     send("#{history}_for",*args)
   end
+
   def planner_for(date,*args)
     send("planner_#{date}_for",args) and return if date.class == String
     range = date.strftime("%m%d") << args[0].strftime("%m%d")    
@@ -34,7 +36,11 @@ class Wunderground
     send("planner_#{range}_for",*args)
   end
 
-protected
+  def respond_to?(method)
+    method_missing_match?(method) || super(method)
+  end
+
+  protected
 
   def call(method, timeout)
     raise MissingAPIKey if @api_key.nil?
@@ -53,7 +59,7 @@ protected
   end
 
   def method_missing(method, *args)
-    raise NoMethodError, "undefined method: #{method} for Wunderground" unless method.to_s.end_with?("_for") 
+    super(method, *args) unless method_missing_match?(method)
     url = method.to_s.gsub("_for","").gsub("_and_","/")
     url << "/lang:#{@language}" if @language
     if args.last.instance_of? Hash
@@ -71,5 +77,10 @@ protected
       new(self.api_key, self.attributes).send(sym, *args, &block)
     end
   end
-end
 
+  private
+
+  def method_missing_match?(method)
+    method.to_s.end_with?("_for")
+  end
+end

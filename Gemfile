@@ -6,10 +6,9 @@ gem "addressable"
 
 group :development, :test do
   gem "shoulda", ">= 0"
-  gem "bundler", "~> 1.0.0"
-  gem "jeweler", "~> 1.5.1"
+  gem "bundler"
+  gem "jeweler"
   gem "simplecov", ">= 0"
   gem "mocha", "> 0.9.11"
-  gem "ruby-debug19", :require => "ruby-debug", :platforms => [:ruby_19]
-  gem "ruby-debug", :platforms => [:ruby_18]
+  gem 'pry'
 end
