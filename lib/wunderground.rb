@@ -42,8 +42,8 @@ class Wunderground
     send("planner_#{range}_for",*args)
   end
 
-  def respond_to?(method)
-    method_missing_match?(method) || super(method)
+  def respond_to?(method, include_all = false)
+    method_missing_match?(method) || super(method, include_all)
   end
 
   protected
