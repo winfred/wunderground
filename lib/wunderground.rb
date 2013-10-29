@@ -43,7 +43,7 @@ class Wunderground
   end
 
   def respond_to?(method, include_all = false)
-    method_missing_match?(method) || super(method, include_all)
+    method_missing_match?(method) || super
   end
 
   protected
