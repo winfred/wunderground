@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "wunderground"
-  s.version = "1.1.0"
+  s.version = "1.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Winfred Nadeau"]
-  s.date = "2013-05-03"
+  s.date = "2014-02-11"
   s.description = "A simple ruby API wrapper for interacting with the Wunderground API"
   s.email = "winfred.nadeau@gmail.com"
   s.extra_rdoc_files = [
@@ -31,7 +31,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/wnadeau/wunderground_ruby"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.25"
+  s.rubygems_version = "1.8.23"
   s.summary = "A simple ruby API wrapper for interacting with the Wunderground API"
 
   if s.respond_to? :specification_version then
