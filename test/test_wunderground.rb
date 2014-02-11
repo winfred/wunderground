@@ -104,6 +104,8 @@ class TestWunderground < Test::Unit::TestCase
         @wunderground.forecast_for("1234.1234,-1234.1234")
         expect_get(@url+"forecast/q/pws:WHAT.json",{timeout: 30})
         @wunderground.forecast_for("pws:WHAT")
+        expect_get(@url+"forecast/q/A,%20B.json",{timeout: 30})
+        @wunderground.forecast_for("A, B")
       end
 
       should 'formats query of type geo_ip' do

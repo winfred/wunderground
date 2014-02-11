@@ -74,7 +74,7 @@ class Wunderground
       ip_address = opts[:geo_ip] and args.push("autoip") if opts[:geo_ip]
       timeout = opts[:timeout]
     end
-    call(url <<'/q/'<< args.join('/') << ".json" << (ip_address ? "?geo_ip=#{ip_address}" : ''),timeout)
+    call(url <<'/q/'<< URI.escape(args.join('/')) << ".json" << (ip_address ? "?geo_ip=#{ip_address}" : ''),timeout)
   end
 
   class << self
